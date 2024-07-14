@@ -207,4 +207,100 @@ if (how_many_years_back > 0): # check if its possible to output past 365 days da
         yearshift += 1
 
 data_dictionary_maxs["Since "+str(start)] = dict(df.max()) # getting the mean of all the data in the dataframe
-print(data_dictionary_maxs)
+
+for currency in selected:
+    print('Most Recent Rate : 1 PHP = '+str(df.loc[df.index[-1], currency]) + " "+currency)
+
+# -----------------------------------------------------------------------
+    
+    print(from_currency+' to '+currency+' mean in :')
+    for monthshift in [1, 3, 6, 9]:
+        index = 'Past '+str(monthshift)+' Month(s)'
+        percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_means[index][currency])/data_dictionary_means[index][currency])*100,2)
+        if percent_change < 0:
+            percent_change_str = str(percent_change*(-1)) + "% Decrease"
+        else:
+            percent_change_str = str(percent_change) + "% Increase"
+        print(index + str(' :'), data_dictionary_means[index][currency], " ,  Current has", percent_change_str)
+    if (how_many_years_back > 0):
+        yearshift = 1
+        while yearshift <= how_many_years_back:
+            index = 'Past '+str(yearshift)+' Year(s)'
+            percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_means[index][currency])/data_dictionary_means[index][currency])*100,2)
+            if percent_change < 0:
+                percent_change_str = str(percent_change*(-1)) + "% Decrease"
+            else:
+                percent_change_str = str(percent_change) + "% Increase"
+            print(index + str(' :'), data_dictionary_means[index][currency], " ,  Current has", percent_change_str)
+            yearshift += 1
+    percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_means["Since "+str(start)][currency])/data_dictionary_means["Since "+str(start)][currency])*100,2)
+    if percent_change < 0:
+        percent_change_str = str(percent_change*(-1)) + "% Decrease"
+    else:
+        percent_change_str = str(percent_change) + "% Increase"
+    print("Since "+str(start) + str(' :'), data_dictionary_means["Since "+str(start)][currency], " ,  Current has", percent_change_str)
+    print('')
+    
+# -----------------------------------------------------------------------
+    
+    print(from_currency+' to '+currency+' highs in :')
+    for monthshift in [1, 3, 6, 9]:
+        index = 'Past '+str(monthshift)+' Month(s)'
+        percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_maxs[index][currency])/data_dictionary_maxs[index][currency])*100,2)
+        if percent_change < 0:
+            percent_change_str = str(percent_change*(-1)) + "% Decrease"
+        else:
+            percent_change_str = str(percent_change) + "% Increase"
+        print(index + str(' :'), data_dictionary_maxs[index][currency], " ,  Current has", percent_change_str)
+    if (how_many_years_back > 0):
+        yearshift = 1
+        while yearshift <= how_many_years_back:
+            index = 'Past '+str(yearshift)+' Year(s)'
+            percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_maxs[index][currency])/data_dictionary_maxs[index][currency])*100,2)
+            if percent_change < 0:
+                percent_change_str = str(percent_change*(-1)) + "% Decrease"
+            else:
+                percent_change_str = str(percent_change) + "% Increase"
+            print(index + str(' :'), data_dictionary_maxs[index][currency], " ,  Current has", percent_change_str)
+            yearshift += 1
+    percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_maxs["Since "+str(start)][currency])/data_dictionary_maxs["Since "+str(start)][currency])*100,2)
+    if percent_change < 0:
+        percent_change_str = str(percent_change*(-1)) + "% Decrease"
+    else:
+        percent_change_str = str(percent_change) + "% Increase"
+    print("Since "+str(start) + str(' :'), data_dictionary_maxs["Since "+str(start)][currency], " ,  Current has", percent_change_str)
+    print('')
+    
+# -----------------------------------------------------------------------
+        
+    print(from_currency+' to '+currency+' lows in :')
+    for monthshift in [1, 3, 6, 9]:
+        index = 'Past '+str(monthshift)+' Month(s)'
+        percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_mins[index][currency])/data_dictionary_mins[index][currency])*100,2)
+        if percent_change < 0:
+            percent_change_str = str(percent_change*(-1)) + "% Decrease"
+        else:
+            percent_change_str = str(percent_change) + "% Increase"
+        print(index + str(' :'), data_dictionary_mins[index][currency], " ,  Current has", percent_change_str)
+    if (how_many_years_back > 0):
+        yearshift = 1
+        while yearshift <= how_many_years_back:
+            index = 'Past '+str(yearshift)+' Year(s)'
+            percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_mins[index][currency])/data_dictionary_mins[index][currency])*100,2)
+            if percent_change < 0:
+                percent_change_str = str(percent_change*(-1)) + "% Decrease"
+            else:
+                percent_change_str = str(percent_change) + "% Increase"
+            print(index + str(' :'), data_dictionary_mins[index][currency], " ,  Current has", percent_change_str)
+            yearshift += 1
+    percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_mins["Since "+str(start)][currency])/data_dictionary_mins["Since "+str(start)][currency])*100,2)
+    if percent_change < 0:
+        percent_change_str = str(percent_change*(-1)) + "% Decrease"
+    else:
+        percent_change_str = str(percent_change) + "% Increase"
+    print("Since "+str(start) + str(' :'), data_dictionary_mins["Since "+str(start)][currency], " ,  Current has", percent_change_str)
+    print('')
+    
+# -----------------------------------------------------------------------
+    print('================================================================================')
+    print('')
