@@ -32,7 +32,7 @@ def UpdateList(var,text):
         selected.remove(text) # Remove the corresponding text from the list
 
 currencies = ["EUR", "USD", "GBP", "CAD", "AUD", "ALL", "DZD", "AOA", "AMD", "AZN", "BSD", "BHD", "BDT", 
-    "BBD", "BYN", "BZD", "BMD", "BOB", "BAM", "BWP", "BRL", "GBP", "BND", "BGN", "BIF", "KHR", 
+    "BBD", "BYN", "BZD", "BMD", "BOB", "BAM", "BWP", "BRL", "BND", "BGN", "BIF", "KHR", 
     "CAD", "CVE", "KYD", "XOF", "XAF", "XPF", "CLP", "CNY", "COP", "CRC", "HRK", "CUP", "CZK", 
     "DKK", "DJF", "DOP", "XCD", "EGP", "ETB", "FJD", "GMD", "GEL", "GHS", "GTQ", "GNF", 
     "HTG", "HNL", "HKD", "ISK", "INR", "IDR", "IRR", "IQD", "ILS", "JMD", "JPY", "JOD", "KZT", 
@@ -49,9 +49,9 @@ for idx,i in enumerate(currencies): # a for loop for making checkboxes for all c
     var = StringVar(value = " ")
     Checkbutton(root,text=i,variable=var,command=lambda i=i,var=var: UpdateList(var,i),onvalue=i).grid(row=(idx//10)+1,column=idx%10)
     
-Label(root, text="Type out original currency from the options above (follow currency code):").grid(row=15, column=0, columnspan= 7)
-from_currency_entry = Entry()
-from_currency_entry.grid(row=15, column = 7, columnspan= 3)
+# Label(root, text="Type out original currency from the options above (follow currency code):").grid(row=15, column=0, columnspan= 7)
+# from_currency_entry = Entry()
+# from_currency_entry.grid(row=15, column = 7, columnspan= 3)
 Label(root, text= "How many years back would you like to consider? (number) (0 for current year").grid(row=16, column=0, columnspan= 7)
 how_many_years_back_entry = Entry()
 how_many_years_back_entry.grid(row=16, column = 7, columnspan= 3)
@@ -60,7 +60,7 @@ how_many_years_back_entry.grid(row=16, column = 7, columnspan= 3)
 def get_data():
     global from_currency
     global how_many_years_back
-    from_currency = from_currency_entry.get().upper()
+    from_currency = "PHP"
     how_many_years_back = int(how_many_years_back_entry.get())
     root.destroy()
 
@@ -151,13 +151,16 @@ current_day = currentdate.day
 data_dictionary_means = {} # dictionary for all important mean points
 
 for monthshift in [1, 3, 6, 9]: # past 1, 3, 6, 9 years
-    if (monthshift >= current_month) & (how_many_years_back > 0): # check if needs to go back one year when going back x months
-        # adds past x months : mean of all data since date x months ago to dictionary
-        data_dictionary_means['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year-1, current_month-(monthshift-12), current_day-1)].mean())
-        # print('Past '+str(monthshift)+' Month(s)', date(current_year-1, current_month-(monthshift-12), current_day-1))
-    elif (monthshift < current_month): # same thing here, just no need to subtract 1 from the current year
-        data_dictionary_means['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year, current_month-monthshift, current_day-1)].mean())
-        # print('Past '+str(monthshift)+' Month(s)', date(current_year, current_month-monthshift, current_day-1))
+    try:
+        if (monthshift >= current_month) & (how_many_years_back > 0): # check if needs to go back one year when going back x months
+            # adds past x months : mean of all data since date x months ago to dictionary
+            data_dictionary_means['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year-1, current_month-(monthshift-12), current_day-1)].mean())
+            # print('Past '+str(monthshift)+' Month(s)', date(current_year-1, current_month-(monthshift-12), current_day-1))
+        elif (monthshift < current_month): # same thing here, just no need to subtract 1 from the current year
+            data_dictionary_means['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year, current_month-monthshift, current_day-1)].mean())
+            # print('Past '+str(monthshift)+' Month(s)', date(current_year, current_month-monthshift, current_day-1))
+    except:
+        continue
         
 if (how_many_years_back > 0): # check if its possible to output past 365 days data
     yearshift = 1
@@ -171,13 +174,16 @@ data_dictionary_means["Since "+str(start)] = dict(df.mean()) # getting the mean 
 data_dictionary_mins = {} # dictionary for all important mean points
 
 for monthshift in [1, 3, 6, 9]: # past 1, 3, 6, 9 years
-    if (monthshift >= current_month) & (how_many_years_back > 0): # check if needs to go back one year when going back x months
-        # adds past x months : mean of all data since date x months ago to dictionary
-        data_dictionary_mins['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year-1, current_month-(monthshift-12), current_day-1)].min())
-        # print('Past '+str(monthshift)+' Month(s)', date(current_year-1, current_month-(monthshift-12), current_day-1))
-    elif (monthshift < current_month): # same thing here, just no need to subtract 1 from the current year
-        data_dictionary_mins['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year, current_month-monthshift, current_day-1)].min())
-        # print('Past '+str(monthshift)+' Month(s)', date(current_year, current_month-monthshift, current_day-1))
+    try:
+        if (monthshift >= current_month) & (how_many_years_back > 0): # check if needs to go back one year when going back x months
+            # adds past x months : mean of all data since date x months ago to dictionary
+            data_dictionary_mins['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year-1, current_month-(monthshift-12), current_day-1)].min())
+            # print('Past '+str(monthshift)+' Month(s)', date(current_year-1, current_month-(monthshift-12), current_day-1))
+        elif (monthshift < current_month): # same thing here, just no need to subtract 1 from the current year
+            data_dictionary_mins['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year, current_month-monthshift, current_day-1)].min())
+            # print('Past '+str(monthshift)+' Month(s)', date(current_year, current_month-monthshift, current_day-1))
+    except:
+        continue
         
 if (how_many_years_back > 0): # check if its possible to output past 365 days data
     yearshift = 1
@@ -190,14 +196,17 @@ data_dictionary_mins["Since "+str(start)] = dict(df.min()) # getting the mean of
 
 data_dictionary_maxs = {} # dictionary for all important mean points
 
-for monthshift in [1, 3, 6, 9]: # past 1, 3, 6, 9 years
-    if (monthshift >= current_month) & (how_many_years_back > 0): # check if needs to go back one year when going back x months
-        # adds past x months : mean of all data since date x months ago to dictionary
-        data_dictionary_maxs['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year-1, current_month-(monthshift-12), current_day-1)].max())
-        # print('Past '+str(monthshift)+' Month(s)', date(current_year-1, current_month-(monthshift-12), current_day-1))
-    elif (monthshift < current_month): # same thing here, just no need to subtract 1 from the current year
-        data_dictionary_maxs['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year, current_month-monthshift, current_day-1)].max())
-        # print('Past '+str(monthshift)+' Month(s)', date(current_year, current_month-monthshift, current_day-1))
+for monthshift in [1, 3, 6, 9]: # past 1, 3, 6, 9 months
+    try:
+        if (monthshift >= current_month) & (how_many_years_back > 0): # check if needs to go back one year when going back x months
+            # adds past x months : mean of all data since date x months ago to dictionary
+            data_dictionary_maxs['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year-1, current_month-(monthshift-12), current_day-1)].max())
+            # print('Past '+str(monthshift)+' Month(s)', date(current_year-1, current_month-(monthshift-12), current_day-1))
+        elif (monthshift < current_month): # same thing here, just no need to subtract 1 from the current year
+            data_dictionary_maxs['Past '+str(monthshift)+' Month(s)'] = dict(df[df.index.date > date(current_year, current_month-monthshift, current_day-1)].max())
+            # print('Past '+str(monthshift)+' Month(s)', date(current_year, current_month-monthshift, current_day-1))
+    except:
+        continue
         
 if (how_many_years_back > 0): # check if its possible to output past 365 days data
     yearshift = 1
@@ -210,18 +219,81 @@ data_dictionary_maxs["Since "+str(start)] = dict(df.max()) # getting the mean of
 
 for currency in selected:
     print('Most Recent Rate : 1 PHP = '+str(df.loc[df.index[-1], currency]) + " "+currency)
+    
+# Adding a star for when the maximum last month is higher than the max rate in specified timeframe
+    max_recent_month = data_dictionary_maxs['Past 1 Month(s)'][currency]
+    max_recent_3_month = data_dictionary_maxs.get('Past 3 Month(s)', {}).get(currency, None)
+    max_recent_6_month = data_dictionary_maxs.get('Past 6 Month(s)', {}).get(currency, None)
+    max_recent_9_month = data_dictionary_maxs.get('Past 9 Month(s)', {}).get(currency, None)
+    current_rate = float(df.loc[df.index[-1], currency])
+    if how_many_years_back == 0:
+        recent_rates = [max_recent_3_month, max_recent_6_month, max_recent_9_month]
+        recent_rates = [float(rate) for rate in recent_rates if rate is not None]
+    
+        if recent_rates:
+            percentage_difference = ((float(current_rate) - float(max_recent_month)) / float(max_recent_month)) * 100
+            if float(max_recent_month) >= float(max(recent_rates)):
+                if percentage_difference > 0:
+                    print(f"⭐ | The highest rate recorded this year was seen in the last month, current rate is {percentage_difference:.2f}% higher than that.")
+                else:
+                    print(f"⭐ | The highest rate recorded this year was seen in the last month, current rate is {abs(percentage_difference):.2f}% lower than that.")
+    
+    if how_many_years_back == 1:
+        max_last_year = df[df.index.year == (df.index[-1].year - 1)][currency].max()
+        if max_last_year is not None:
+            percentage_difference = ((float(current_rate) - float(max_recent_month)) / float(max_recent_month)) * 100
+            if float(max_recent_month) >= float(max_last_year):
+                if percentage_difference > 0:
+                    print(f"⭐ | The highest rate recorded in the last month is higher than the max rate recorded last year, current is {percentage_difference:.2f}% higher than that.")
+                else:
+                    print(f"⭐ | The highest rate recorded in the last month is higher than the max rate recorded last year, current is {abs(percentage_difference):.2f}% lower than that.")
+    
+    if how_many_years_back >= 2:
+        max_previous_years = []
+        for year in range(1, how_many_years_back + 1):
+            value = data_dictionary_maxs.get(f'Past {year} Year(s)', {}).get(currency, None)
+            if value is not None:
+                max_previous_years.append(value)
+    
+        max_previous_yearz = df[df.index.year < (df.index[-1].year)][currency].max()  # Get max for previous years
+    
+        if max_previous_yearz is not None:
+            percentage_difference = ((float(current_rate) - float(max_recent_month)) / float(max_recent_month)) * 100
+            if float(max_recent_month) >= float(max_previous_yearz):
+                if percentage_difference > 0:
+                    print(f"⭐ | The highest rate recorded in the last month is higher than the max rate recorded in the previous {how_many_years_back} years, excluding this year, current is {percentage_difference:.2f}% higher than this!")
+                else:
+                    print(f"⭐ | The highest rate recorded in the last month is higher than the max rate recorded in the previous {how_many_years_back} years, excluding this year, current is {abs(percentage_difference):.2f}% lower than this!")
 
+# Adding a star for when the exact current rate is higher than the max rate in specified timeframe
+    if how_many_years_back == 0:
+        recent_rates_ver_2 = [max_recent_month, max_recent_3_month, max_recent_6_month, max_recent_9_month]
+        recent_rates_ver_2 = [float(rate) for rate in recent_rates_ver_2 if rate is not None]
+        if float(current_rate) >= float(max(recent_rates_ver_2)):
+            print("⭐ | The current rate is the highest rate this year!")
+
+    elif how_many_years_back == 1:
+        if float(current_rate) >= float(max_last_year):
+            print("⭐ | The current rate is higher the max rate last year!")
+
+    elif how_many_years_back >= 2:
+        if float(current_rate) >= float(max_previous_yearz):
+            print(f"⭐ | The current rate is higher than the max in the last {how_many_years_back} years! (excluding current year)")
+    
 # -----------------------------------------------------------------------
     
     print(from_currency+' to '+currency+' mean in :')
     for monthshift in [1, 3, 6, 9]:
         index = 'Past '+str(monthshift)+' Month(s)'
-        percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_means[index][currency])/data_dictionary_means[index][currency])*100,2)
-        if percent_change < 0:
-            percent_change_str = str(percent_change*(-1)) + "% Decrease"
-        else:
-            percent_change_str = str(percent_change) + "% Increase"
-        print(index + str(' :'), data_dictionary_means[index][currency], " ,  Current has", percent_change_str)
+        try:
+            percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_means[index][currency])/data_dictionary_means[index][currency])*100,2)
+            if percent_change < 0:
+                percent_change_str = str(percent_change*(-1)) + "% Decrease"
+            else:
+                percent_change_str = str(percent_change) + "% Increase"
+            print(index + str(' :'), data_dictionary_means[index][currency], " ,  Current has", percent_change_str)
+        except:
+            continue
     if (how_many_years_back > 0):
         yearshift = 1
         while yearshift <= how_many_years_back:
@@ -245,13 +317,16 @@ for currency in selected:
     
     print(from_currency+' to '+currency+' highs in :')
     for monthshift in [1, 3, 6, 9]:
-        index = 'Past '+str(monthshift)+' Month(s)'
-        percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_maxs[index][currency])/data_dictionary_maxs[index][currency])*100,2)
-        if percent_change < 0:
-            percent_change_str = str(percent_change*(-1)) + "% Decrease"
-        else:
-            percent_change_str = str(percent_change) + "% Increase"
-        print(index + str(' :'), data_dictionary_maxs[index][currency], " ,  Current has", percent_change_str)
+        try:
+            index = 'Past '+str(monthshift)+' Month(s)'
+            percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_maxs[index][currency])/data_dictionary_maxs[index][currency])*100,2)
+            if percent_change < 0:
+                percent_change_str = str(percent_change*(-1)) + "% Decrease"
+            else:
+                percent_change_str = str(percent_change) + "% Increase"
+            print(index + str(' :'), data_dictionary_maxs[index][currency], " ,  Current has", percent_change_str)
+        except:
+            continue
     if (how_many_years_back > 0):
         yearshift = 1
         while yearshift <= how_many_years_back:
@@ -275,13 +350,16 @@ for currency in selected:
         
     print(from_currency+' to '+currency+' lows in :')
     for monthshift in [1, 3, 6, 9]:
-        index = 'Past '+str(monthshift)+' Month(s)'
-        percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_mins[index][currency])/data_dictionary_mins[index][currency])*100,2)
-        if percent_change < 0:
-            percent_change_str = str(percent_change*(-1)) + "% Decrease"
-        else:
-            percent_change_str = str(percent_change) + "% Increase"
-        print(index + str(' :'), data_dictionary_mins[index][currency], " ,  Current has", percent_change_str)
+        try:
+            index = 'Past '+str(monthshift)+' Month(s)'
+            percent_change = round(((df.loc[df.index[-1], currency]-data_dictionary_mins[index][currency])/data_dictionary_mins[index][currency])*100,2)
+            if percent_change < 0:
+                percent_change_str = str(percent_change*(-1)) + "% Decrease"
+            else:
+                percent_change_str = str(percent_change) + "% Increase"
+            print(index + str(' :'), data_dictionary_mins[index][currency], " ,  Current has", percent_change_str)
+        except:
+            continue
     if (how_many_years_back > 0):
         yearshift = 1
         while yearshift <= how_many_years_back:
